@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>단어 표시 프로그램</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #inputText {
+            font-size: 14px;
+            width: 80%;
+            height: 380px;
+            padding: 10px;
+            margin: 20px;
+        }
+        #wordDisplay {
+            font-size: 24px;
+            padding: 10px;
+            margin: 20px;
+            height: 200px ;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #sec_pre{
+            padding: 10px;
+            margin: 20px; 
+        }
+        #sec{
+            padding: 10px;
+            margin: 20px; 
+        }
+        #startButton {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 20px;
+        }
+        .container {
+            width: 100%;
+        }
+        .left {
+            float: left;
+            width: 50%;
+            height: 1000px;
+            background-color: lightblue;
+        }
+
+        .right {
+            float: right;
+            width: 50%;
+            height: 1000px;
+            background-color: lightpink;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <div class="left">
+        <textarea id="inputText" placeholder="여기에 단어를 입력하세요."></textarea>
+        </br>
+        <div id="sec_pre"> sec : </div>
+        <input type="text" id="sec" name="sec" required minlength="4" maxlength="8" size="10" />
+        <button id="startButton" onclick="showWords()">시작하기</button>
+    </div>
+    <div class="right">
+        <div id="wordDisplay"></div>
+    </div>
+    </div>
+
+
+    <script>
+        function showWords() {
+            let inputText = document.getElementById("inputText").value;
+            let words = inputText.split(/\s+/);  // 공백으로 단어들을 분리
+            let second = Number(document.getElementById("sec").value);
+            document.getElementById("sec_pre").innerText = words.length * second / 1000 + "초";
+            let i = 0;
+            let intervalId = setInterval(function () {
+                if (i < words.length) {
+                    document.getElementById("wordDisplay").innerText = words[i];
+                    i++;
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, second);  // 1초 간격으로 단어 표시
+        }
+    </script>
+</body>
+</html>
