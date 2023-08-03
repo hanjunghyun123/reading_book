@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>텍스트 분할 웹 사이트</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    #left {
+      flex: 1;
+    }
+    #right {
+      flex: 1;
+    }
+    .highlight {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <div id="left">
+    <textarea id="textInput" rows="10" cols="40" oninput="predict_sec()"></textarea>
+    <button onclick="updateText()">시작하기</button>
+    <div id="sec_pre"> sec : </div>
+    <input type="text" id="sec" name="sec" required minlength="4" maxlength="8" size="10" />
+  </div>
+  <div id="right">
+    <p id="output"></p>
+  </div>
+  <script>
+    function updateText2(words, i) {
+      let text_out = "";
+      for (let j = 0; j < words.length; j++) {
+        if (i == j) {
+          text_out += `<span class="highlight">${words[j]}</span> `;
+        } else {
+          text_out += words[j];
+          text_out += " ";
+        }
+      }
+      document.getElementById("output").innerHTML = text_out;
+    }
+
+    function predict_sec(){
+        const textInput = document.getElementById("textInput");
+        const inputText = textInput.value;
+        const words = inputText.split(" ");
+        const sec = Number(document.getElementById("sec").value);
+        document.getElementById("sec_pre").innerHTML = sec / 1000 * words.length;
+    }
+    
+    function updateText() {  
+      const textInput = document.getElementById("textInput");
+      const inputText = textInput.value;
+      const words = inputText.split(" ");
+      const sec = Number(document.getElementById("sec").value);
+      let i = 0;
+      function highlightNextWord() {
+        updateText2(words, i);
+        i++;
+        if (i < words.length) {
+          setTimeout(highlightNextWord, sec);
+        }
+      }
+      highlightNextWord();
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
