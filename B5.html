@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단어 표시 프로그램</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        textarea, #wordDisplay {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 50vh; /* 반응형 높이 조정 */
+            padding: 10px;
+        }
+        #wordDisplay {
+            height: 50vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: #f0f0f0;
+            transition: transform 0.5s ease; /* 부드러운 전환 효과 */
+        }
+        #controls {
+            padding: 10px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="inputText" placeholder="여기에 단어를 입력하세요."></textarea>
+    <div id="controls">
+        <div id="sec_pre">sec :</div>
+        <input type="text" id="sec" required minlength="1" maxlength="4" size="10">
+        <button id="startButton">시작하기</button>
+    </div>
+    <div id="wordDisplay"></div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const wordDisplay = document.getElementById('wordDisplay');
+        let isUp = false;
+
+        function showWords() {
+            let inputText = document.getElementById('inputText').value;
+            let words = inputText.split(/\s+/);
+            let second = Number(document.getElementById('sec').value) || 1000;
+            let i = 0;
+            document.getElementById('sec_pre').innerText = words.length * second / 1000 + "초";
+
+            let intervalId = setInterval(function () {
+                if (i < words.length) {
+                    wordDisplay.innerText = words[i++];
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, second);
+            toggleView();
+        }
+
+        function toggleView() {
+            wordDisplay.style.transform = isUp ? 'translateY(0)' : 'translateY(-100%)';
+            isUp = !isUp;
+        }
+
+        startButton.addEventListener('click', showWords);
+    </script>
+</body>
+</html>
