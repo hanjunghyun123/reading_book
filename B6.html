@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단어 표시 프로그램</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        textarea, #wordDisplay {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 50vh;
+            padding: 10px;
+        }
+        #wordDisplay {
+            height: 50vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: #f0f0f0;
+            transition: transform 0.5s ease;
+        }
+        #controls {
+            padding: 10px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        select, input[type="text"], input[type="color"] {
+            margin: 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="inputText" placeholder="여기에 단어를 입력하세요."></textarea>
+    <div id="controls">
+        <div id="sec_pre">sec :</div>
+        <input type="text" id="sec" required minlength="1" maxlength="4" size="10">
+        <button id="startButton">시작하기</button>
+        <button id="pauseButton">일시정지</button>
+        <button id="resumeButton">재개</button>
+        <select id="fontSize">
+            <option value="16px">16px</option>
+            <option value="24px" selected>24px</option>
+            <option value="32px">32px</option>
+        </select>
+        <input type="color" id="fontColor" value="#000000">
+    </div>
+    <div id="wordDisplay"></div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const pauseButton = document.getElementById('pauseButton');
+        const resumeButton = document.getElementById('resumeButton');
+        const wordDisplay = document.getElementById('wordDisplay');
+        let intervalId = null;
+        let isPaused = false;
+        let isUp = false;
+
+        function showWords() {
+            let inputText = document.getElementById('inputText').value;
+            let words = inputText.split(/\s+/);
+            let second = Number(document.getElementById('sec').value) || 1000;
+            let i = 0;
+            document.getElementById('sec_pre').innerText = words.length * second / 1000 + "초";
+            intervalId = setInterval(function () {
+                if (!isPaused && i < words.length) {
+                    wordDisplay.innerText = words[i++];
+                }
+                if (i >= words.length) {
+                    clearInterval(intervalId);
+                }
+            }, second);
+            toggleView();
+        }
+
+        function pauseWords() {
+            isPaused = true;
+        }
+
+        function resumeWords() {
+            isPaused = false;
+        }
+
+        function updateDisplayOptions() {
+            const fontSize = document.getElementById('fontSize').value;
+            const fontColor = document.getElementById('fontColor').value;
+            wordDisplay.style.fontSize = fontSize;
+            wordDisplay.style.color = fontColor;
+        }
+
+        function toggleView() {
+            wordDisplay.style.transform = isUp ? 'translateY(0)' : 'translateY(-100%)';
+            isUp = !isUp;
+        }
+
+        startButton.addEventListener('click', showWords);
+        pauseButton.addEventListener('click', pauseWords);
+        resumeButton.addEventListener('click', resumeWords);
+        document.getElementById('fontSize').addEventListener('change', updateDisplayOptions);
+        document.getElementById('fontColor').addEventListener('input', updateDisplayOptions);
+    </script>
+</body>
+</html>
